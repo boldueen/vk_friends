@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "vk-friends"
+version = "0.1.0"
+description = "Лабороторная работа №2"
+authors = ["inikonov <i.nikonov@cyrm.ru>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+aiohttp = "^3.10.10"
+pydantic = "^2.9.2"
+loguru = "^0.7.2"
+requests = "^2.32.3"
+networkx = "^3.4.1"
+matplotlib = "^3.9.2"
+scipy = "^1.14.1"
+pyvis = "^0.3.2"
+tenacity = "^9.0.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
