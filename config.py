@@ -4,7 +4,7 @@ from schemas.vk_user import VkUser
 
 
 class Config(BaseModel):
-    VK_ACCESS_TOKEN: str = "vk1.a.6_ckGOqg1eHPAyoinwfEc_BjplTo6LOcsbk5Fobhh5NZdc33aQ-gV9GZukhgqLRQ9OuDq36ZxLgS9f19TQJZEhHZa8_4Xkub0seBWxhBrUKVjWkARRWxR1RoURcNMbAftyagVUZxzfmpSRy_K33jgMUaw7nYev1W6i5tEYqJ7DyDiy68uYEMA6ShfUnhWD6uZkPxPh9dZ0ZyWuANGTRCkA"
+    VK_ACCESS_TOKEN: str = "vk1"
     FIRST_LEVEL_USERS_LIST: list[VkUser] = [
         VkUser(
             id=396854328,
