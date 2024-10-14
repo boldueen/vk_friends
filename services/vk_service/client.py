@@ -32,5 +32,5 @@ class VkHTTPClient:
         return response.text
 
     def refresh_access_token(self) -> None:
-        new_token = input("Press Enter new access token to continue...")
+        new_token = input("Press Enter new access token to continue...\n")
         self._access_token = new_token
