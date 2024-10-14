@@ -15,19 +15,16 @@ class ParseFriendsUsecase:
         self,
         vk_http_client: VkHTTPClient,
         vk_parser: VkParser,
-        filepath: str,
-        vizualize: bool = False,
     ):
         self.vk_http_client: VkHTTPClient = vk_http_client
         self.vk_parser: VkParser = vk_parser
-        self.vizualize = vizualize
-        self.filepath = filepath
+
         self._mem: dict = {}
 
     def __call__(
         self,
         first_level_users: list[VkUser],
-        depth: int | None = 3,
+        depth: int | None = 2,
     ):
         result_friends: list[VkUser] = []
         users_to_parse_q = deque(first_level_users)
@@ -52,12 +49,6 @@ class ParseFriendsUsecase:
                 logger.success(f"got {len(friends)} friends for {user.id}")
 
             users_to_parse_q += tmp_users_storage
-
-        if self.vizualize:
-            generate_visual_graph([f.model_dump() for f in result_friends])
-
-        with open(self.filepath, "w") as f:
-            json.dump([f.model_dump() for f in result_friends], f)
 
         return result_friends
 
