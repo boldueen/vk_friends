@@ -23,7 +23,7 @@ class VkHTTPClient:
         except ApiError as e:
             return []
 
-        friends_list = response.get("items", [])[:5]
+        friends_list = response.get("items", [])[:100]
 
         return [
             VkUser(
