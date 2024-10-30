@@ -27,7 +27,7 @@ class VkHTTPClient:
 
         return [
             VkUser(
-                id=friend["id"],
+                id=str(friend["id"]),
                 name=friend["first_name"] + " " + friend["last_name"],
                 friend_ids=[],
                 parent_friend_id=user_id,

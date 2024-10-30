@@ -7,22 +7,22 @@ class Config(BaseModel):
     VK_ACCESS_TOKEN: str = ""
     FIRST_LEVEL_USERS_LIST: list[VkUser] = [
         VkUser(
-            id=396854328,
+            id="396854328",
             name="Денис Яценко",
             parent_friend_id=None,
         ),
         VkUser(
-            id=151413977,
+            id="151413977",
             name="Владислав Утц",
             parent_friend_id=None,
         ),
         VkUser(
-            id=144399122,
+            id="144399122",
             name="Александр Чекунков",
             parent_friend_id=None,
         ),
         VkUser(
-            id=270780454,
+            id="270780454",
             name="Иван Никонов",
             parent_friend_id=None,
         ),

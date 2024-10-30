@@ -17,13 +17,19 @@ def main():
         vk_client,
     )
     filename = f"{int(time.time())}_parsed_friends.json"
+    with open(filename, "w") as f:
+        f.write("{\n")
 
     for user in config.FIRST_LEVEL_USERS_LIST:
         logger.info(f"parsing {user.name}")
         friends = usecase(user)
 
-        with open(filename, "w") as f:
-            json.dump([friend.model_dump() for friend in friends], f)
+        with open(filename, "a") as f:
+            data = json.dumps([friend.model_dump() for friend in friends])
+            f.write(f"{user.id}:{data},\n")
+
+    with open(filename, "a") as f:
+        f.write("\n}")
 
 
 if __name__ == "__main__":
