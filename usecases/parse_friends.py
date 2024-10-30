@@ -1,41 +1,34 @@
 from collections import deque
-import json
 
 from loguru import logger
 
 from schemas.vk_user import VkUser
 from services.vk_service.client import VkHTTPClient
-from services.vk_service.parser import VkParser
-
-from services.visualize.vizualize_graph import generate_visual_graph
 
 
-class ParseFriendsUsecase:
+class ParseUserFriendsUsecase:
     def __init__(
         self,
         vk_http_client: VkHTTPClient,
-        vk_parser: VkParser,
     ):
         self.vk_http_client: VkHTTPClient = vk_http_client
-        self.vk_parser: VkParser = vk_parser
 
         self._mem: dict = {}
 
     def __call__(
         self,
-        first_level_users: list[VkUser],
-        depth: int | None = 2,
-    ):
-        result_friends: list[VkUser] = []
-        users_to_parse_q = deque(first_level_users)
+        first_level_user: VkUser,
+    ) -> list[VkUser]:
+        result_friends: list[VkUser] = [first_level_user]
+        users_to_parse_q = deque([first_level_user])
 
-        for i in range(depth):
+        for i in range(3):
             logger.info(f"iteration {i}")
             tmp_users_storage = []
             while len(users_to_parse_q) > 0:
                 user = users_to_parse_q.popleft()
 
-                friends = self._get_friends(user.id)[:10]
+                friends = self._get_friends(user.id)
 
                 if len(friends) == 0:
                     logger.error(f"no friends for {user.id}")
@@ -61,7 +54,6 @@ class ParseFriendsUsecase:
         if user_id in self._mem:
             return self._mem[user_id]
 
-        raw_data = self.vk_http_client.get_friends(user_id=user_id)
-        friends = self.vk_parser.parse_friends(user_id, raw_data)
+        friends = self.vk_http_client.get_friends(user_id=user_id)
         self._mem[user_id] = friends
         return friends

@@ -6,22 +6,24 @@ from schemas.vk_user import VkUser
 from services.vk_service.client import VkHTTPClient
 from config import config
 from services.vk_service.parser import VkParser
-from usecases.parse_friends import ParseFriendsUsecase
+from usecases.parse_friends import ParseUserFriendsUsecase
 
 
 def main():
     logger.info("Starting...")
 
     vk_client = VkHTTPClient(config.VK_ACCESS_TOKEN)
-    vk_parser = VkParser()
-    usecase = ParseFriendsUsecase(
+    usecase = ParseUserFriendsUsecase(
         vk_client,
-        vk_parser,
     )
-    friends_graph: list[VkUser] = usecase(config.FIRST_LEVEL_USERS_LIST)  # type: ignore
+    filename = f"{int(time.time())}_parsed_friends.json"
 
-    with open(f"{int(time.time())}_parsed_friends.json", "w") as f:
-        json.dump([f.model_dump() for f in friends_graph], f)
+    for user in config.FIRST_LEVEL_USERS_LIST:
+        logger.info(f"parsing {user.name}")
+        friends = usecase(user)
+
+        with open(filename, "w") as f:
+            json.dump([friend.model_dump() for friend in friends], f)
 
 
 if __name__ == "__main__":

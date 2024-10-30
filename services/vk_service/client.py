@@ -1,11 +1,7 @@
-from aiohttp import ClientSession
+import vk_api
+from vk_api.exceptions import ApiError
 
-from config import config
-from loguru import logger
-
-import requests
-
-from tenacity import retry
+from schemas.vk_user import VkUser
 
 
 class VkHTTPClient:
@@ -13,24 +9,28 @@ class VkHTTPClient:
     _api_version: str = "5.81"
 
     def __init__(self, access_token: str) -> None:
-        self.base_url = "https://api.vk.com/method"
-        self._access_token = access_token
-        self._auth_token = f"BEARER {access_token}"
+        self.token = access_token
+        self.session = vk_api.VkApi(token=self.token)
+        self.api = self.session.get_api()
 
-    def get_friends(self, user_id: int) -> str:
-        response = requests.get(
-            f"{self.base_url}/friends.get?user_id={user_id}&access_token={self._access_token}&v={self._api_version}&fields=nickname"
-        )
-        logger.info(response.status_code)
-        if "access_token has expired" in response.text:
-            self.refresh_access_token()
-            response = requests.get(
-                f"{self.base_url}/friends.get?user_id={user_id}&access_token={self._access_token}&v={self._api_version}&fields=nickname"
+    def get_friends(self, user_id: str) -> list[VkUser]:
+        try:
+            response = self.api.friends.get(
+                user_id=user_id,
+                fields=["nickname"],
+                limit=5,
             )
-        logger.info(response.status_code)
+        except ApiError as e:
+            return []
 
-        return response.text
+        friends_list = response.get("items", [])[:5]
 
-    def refresh_access_token(self) -> None:
-        new_token = input("Press Enter new access token to continue...\n")
-        self._access_token = new_token
+        return [
+            VkUser(
+                id=friend["id"],
+                name=friend["first_name"] + " " + friend["last_name"],
+                friend_ids=[],
+                parent_friend_id=user_id,
+            )
+            for friend in friends_list
+        ]
